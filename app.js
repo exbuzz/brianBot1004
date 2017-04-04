@@ -59,6 +59,32 @@ app.use(function (err, req, res, next) {
   });
 });
 
+//Register pause:
+var pausedUsers = {}
+app.post('/pause', jsonParser, function (req, res) {
+  const userId = req.body.userId
+  const paused = req.body.paused
+  pausedUsers[userId] = paused
+  res.send("ok")
+})
+
+app.post('/webhook/', jsonParser, function (req, res) {
+  dashbot.logIncoming(req.body);
+  if(req.body.entry){
+    req.body.entry.forEach(function(entry){
+      if(entry.messaging){
+        entry.messaging.forEach(function(event){
+          var recipientId = event.sender.id;
+          if(!pausedUsers[recipientId]){
+            //handle message if session is not paused for this userId
+            [...]
+          }
+        }
+      }
+    }
+  }
+}
+
 // Start listening
 var port = process.env.port || process.env.PORT || 3978;
 app.listen(port, function () {
