@@ -33,22 +33,24 @@ app.use('/checkout', checkout);
 // Register Bot
 var bot = require('./bot');
 app.post('/api/messages', bot.listen());
-// app.post('/api/messages', jsonParser, function (req, res) {
-//   dashbot.logIncoming(req.body);
-//   if(req.body.entry){
-//     req.body.entry.forEach(function(entry){
-//       if(entry.messaging){
-//         entry.messaging.forEach(function(event){
-//           var recipientId = event.sender.id;
-//           if(!pausedUsers[recipientId]){
-//             //handle message if session is not paused for this userId
-//             bot.listen();
-//           }
-//         })
-//       }
-//     })
-//   }
-// });
+
+app.post('/webhook', jsonParser, function (req, res) {
+  dashbot.logIncoming(req.body);
+  if(req.body.entry){
+    req.body.entry.forEach(function(entry){
+      if(entry.messaging){
+        entry.messaging.forEach(function(event){
+          var recipientId = event.sender.id;
+          if(!pausedUsers[recipientId]){
+            //handle message if session is not paused for this userId
+            //bot.listen();
+            session.send("Hiya boy");
+          }
+        })
+      }
+    })
+  }
+});
 
 
 // Catch 404 and forward to error handler
@@ -87,6 +89,7 @@ app.post('/pause', jsonParser, function (req, res) {
   const paused = req.body.paused
   pausedUsers[userId] = paused
   res.send("ok")
+
 })
 
 
