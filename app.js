@@ -1,11 +1,15 @@
 // This loads the environment variables from the .env file
 require('dotenv-extended').load();
+var dashbotKey = process.env.DASHBOT_API_KEY;
+var dashbot = require('dashbot')(dashbotKey).facebook;
+
+var bodyParser = require('body-parser');
 
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 
-
+var jsonParser = bodyParser.json();
 
 // Web app
 var app = express();
@@ -29,6 +33,23 @@ app.use('/checkout', checkout);
 // Register Bot
 var bot = require('./bot');
 app.post('/api/messages', bot.listen());
+// app.post('/api/messages', jsonParser, function (req, res) {
+//   dashbot.logIncoming(req.body);
+//   if(req.body.entry){
+//     req.body.entry.forEach(function(entry){
+//       if(entry.messaging){
+//         entry.messaging.forEach(function(event){
+//           var recipientId = event.sender.id;
+//           if(!pausedUsers[recipientId]){
+//             //handle message if session is not paused for this userId
+//             bot.listen();
+//           }
+//         })
+//       }
+//     })
+//   }
+// });
+
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -68,22 +89,7 @@ app.post('/pause', jsonParser, function (req, res) {
   res.send("ok")
 })
 
-app.post('/webhook/', jsonParser, function (req, res) {
-  dashbot.logIncoming(req.body);
-  if(req.body.entry){
-    req.body.entry.forEach(function(entry){
-      if(entry.messaging){
-        entry.messaging.forEach(function(event){
-          var recipientId = event.sender.id;
-          if(!pausedUsers[recipientId]){
-            //handle message if session is not paused for this userId
-            [...]
-          }
-        }
-      }
-    }
-  }
-}
+
 
 // Start listening
 var port = process.env.port || process.env.PORT || 3978;
