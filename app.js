@@ -33,7 +33,7 @@ app.use('/checkout', checkout);
 // Register Bot
 var bot = require('./bot');
 
-app.post('/api/messages', jsonParser, function (req, res) {
+app.post('/api/messages', function (req, res) {
   dashbot.logIncoming(req.body);
   if(req.body.entry){
     req.body.entry.forEach(function(entry){
@@ -48,9 +48,7 @@ app.post('/api/messages', jsonParser, function (req, res) {
       }
     })
   }
-});
-
-app.post('/api/messages', bot.listen(),);
+  },bot.listen());
 
 
 
