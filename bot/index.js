@@ -1,5 +1,8 @@
 var builder = require('botbuilder');
 var siteUrl = require('./site-url');
+var pausedUsers = {};
+//var dashbotKey = process.env.DASHBOT_API_KEY;
+//var dashbot = require('dashbot')(dashbotKey).facebook;
 
 const dashbotApiMap = {
   facebook: process.env.DASHBOT_API_KEY_FACEBOOK,
@@ -117,9 +120,27 @@ function listen() {
     return function (req, res) {
         // Capture the url for the hosted application
         // We'll later need this url to create the checkout link 
-        var url = req.protocol + '://' + req.get('host');
-        siteUrl.save(url);
-        connectorListener(req, res);
+
+
+        //dashbot.logIncoming(req.body);
+        // if(req.body.entry){
+        //     req.body.entry.forEach(function(entry){
+        //     if(entry.messaging){
+        //         entry.messaging.forEach(function(event){
+            if(req && req.body) {
+                var recipientId = req.body.recipientId;
+                if(!pausedUsers[recipientId]){
+
+                    var url = req.protocol + '://' + req.get('host');
+                    siteUrl.save(url);
+                    connectorListener(req, res);
+                }
+            }
+        //         })
+        //     }
+        //     })
+        // }
+
     };
 }
 
@@ -135,5 +156,6 @@ function sendMessage(message) {
 module.exports = {
     listen: listen,
     beginDialog: beginDialog,
-    sendMessage: sendMessage
+    sendMessage: sendMessage,
+    pausedUsers: pausedUsers
 };
