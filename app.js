@@ -1,7 +1,6 @@
 // This loads the environment variables from the .env file
 require('dotenv-extended').load();
-var dashbotKey = process.env.DASHBOT_API_KEY;
-var dashbot = require('dashbot')(dashbotKey).facebook;
+
 
 var bodyParser = require('body-parser');
 
@@ -33,24 +32,24 @@ app.use('/checkout', checkout);
 // Register Bot
 var bot = require('./bot');
 
-app.post('/api/messages', jsonParser, function (req, res) {
-  dashbot.logIncoming(req.body);
-  if(req.body.entry){
-    req.body.entry.forEach(function(entry){
-      if(entry.messaging){
-        entry.messaging.forEach(function(event){
-          var recipientId = event.sender.id;
-          if(!pausedUsers[recipientId]){
+// app.post('/webhook', jsonParser, function (req, res) {
+//   dashbot.logIncoming(req.body);
+//   if(req.body.entry){
+//     req.body.entry.forEach(function(entry){
+//       if(entry.messaging){
+//         entry.messaging.forEach(function(event){
+//           var recipientId = event.sender.id;
+//           if(!pausedUsers[recipientId]){
 
-              next();
-          }
-        })
-      }
-    })
-  }
-});
+//               next();
+//           }
+//         })
+//       }
+//     })
+//   }
+// });
 
-app.post('/api/messages', bot.listen(),);
+app.post('/api/messages', bot.listen());
 
 
 
@@ -85,11 +84,11 @@ app.use(function (err, req, res, next) {
 });
 
 //Register pause:
-var pausedUsers = {}
+
 app.post('/pause', jsonParser, function (req, res) {
   const userId = req.body.userId
   const paused = req.body.paused
-  pausedUsers[userId] = paused
+  bot.pausedUsers[userId] = paused
   res.send("ok")
 
 })
