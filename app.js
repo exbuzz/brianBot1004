@@ -63,13 +63,10 @@ app.post('/pause', jsonParser, function (req, res) {
 
 })
 
-// app.get('/pause', jsonParser, function (req, res) {
-//   const userId = req.body.userId
-//   const paused = req.body.paused
-//   bot.pausedUsers[userId] = paused
-//   res.send("ok")
+app.get('/pause', function (req, res) {
 
-// })
+  res.send(bot.pausedUsers);
+})
 
 
 // Catch 404 and forward to error handler
