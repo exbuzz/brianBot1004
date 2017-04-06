@@ -52,8 +52,24 @@ var bot = require('./bot');
 
 app.post('/api/messages', bot.listen());
 
+// app.post('/api/messages2', bot.listen());
+//Register pause:
 
+app.post('/pause', jsonParser, function (req, res) {
+  const userId = req.body.userId
+  const paused = req.body.paused
+  bot.pausedUsers[userId] = paused
+  res.send("ok")
 
+})
+
+// app.get('/pause', jsonParser, function (req, res) {
+//   const userId = req.body.userId
+//   const paused = req.body.paused
+//   bot.pausedUsers[userId] = paused
+//   res.send("ok")
+
+// })
 
 
 // Catch 404 and forward to error handler
@@ -84,17 +100,6 @@ app.use(function (err, req, res, next) {
     error: {}
   });
 });
-
-//Register pause:
-
-app.post('/pause', jsonParser, function (req, res) {
-  const userId = req.body.userId
-  const paused = req.body.paused
-  bot.pausedUsers[userId] = paused
-  res.send("ok")
-
-})
-
 
 
 // Start listening

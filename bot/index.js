@@ -127,8 +127,8 @@ function listen() {
         //     req.body.entry.forEach(function(entry){
         //     if(entry.messaging){
         //         entry.messaging.forEach(function(event){
-            if(req && req.body) {
-                var recipientId = req.body.recipientId;
+            if(req.body.recipient) {
+                var recipientId = req.body.recipient.id;
                 if(!pausedUsers[recipientId]){
 
                     var url = req.protocol + '://' + req.get('host');
