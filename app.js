@@ -56,9 +56,11 @@ app.post('/api/messages', bot.listen());
 //Register pause:
 
 app.post('/pause', jsonParser, function (req, res) {
-  const userId = req.body.userId
-  const paused = req.body.paused
+  var userId = req.body.userId
+  var paused = req.body.paused
+
   bot.pausedUsers[userId] = paused
+
   res.send("ok")
 
 })

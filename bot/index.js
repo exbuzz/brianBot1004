@@ -80,7 +80,9 @@ bot.use(dashbot,{
             return session.beginDialog('settings:/');
         } else if (supportRegex.test(text)) {
             // interrupt and trigger 'help' dialog
-            return session.beginDialog('help:/');
+            return session.beginDialog('help:/',{
+                pausedUsers: pausedUsers
+            });
         }
 
         // continue normal flow
