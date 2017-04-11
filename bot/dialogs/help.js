@@ -24,9 +24,16 @@ lib.dialog('/',
         for(var key in pausedUsers) {
             session.send(key+":"+ pausedUsers[key]);
         }
-        session.send("The session:");
+        session.send("session:");
         session.send(JSON.stringify(session,stringifyCircularFix));
-        session.send("Address:" + session.message.address.id);
+        session.send("session.message:");
+        session.send(JSON.stringify(session.message,stringifyCircularFix));
+        session.send("session.message.address:");
+        session.send(JSON.stringify(session.message.address,stringifyCircularFix));
+        session.send("session.message.address.user:");
+        session.send(JSON.stringify(session.message.address.user,stringifyCircularFix));
+        session.send("session.message.address.user.id:" + session.message.address.user.id);
+        session.send("session.message.address.id:" + session.message.address.id);
 
     }
 ]);

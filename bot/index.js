@@ -70,23 +70,29 @@ bot.library(require('./validators').createLibrary());
 // Trigger secondary dialogs when 'settings' or 'support' is called
 bot.use(dashbot,{
     botbuilder: function (session, next) {
-        var text = session.message.text;
 
-        var settingsRegex = localizedRegex(session, ['main_options_settings']);
-        var supportRegex = localizedRegex(session, ['main_options_talk_to_support', 'help']);
-
-        if (settingsRegex.test(text)) {
-            // interrupt and trigger 'settings' dialog 
-            return session.beginDialog('settings:/');
-        } else if (supportRegex.test(text)) {
-            // interrupt and trigger 'help' dialog
-            return session.beginDialog('help:/',{
-                pausedUsers: pausedUsers
-            });
+        if(session.message.address.user.id && pausedUsers && pausedUsers[session.message.address.user.id]) {
+            next();
         }
+        else {
+            var text = session.message.text;
 
-        // continue normal flow
-        next();
+            var settingsRegex = localizedRegex(session, ['main_options_settings']);
+            var supportRegex = localizedRegex(session, ['main_options_talk_to_support', 'help']);
+
+            if (settingsRegex.test(text)) {
+                // interrupt and trigger 'settings' dialog 
+                return session.beginDialog('settings:/');
+            } else if (supportRegex.test(text)) {
+                // interrupt and trigger 'help' dialog
+                return session.beginDialog('help:/',{
+                    pausedUsers: pausedUsers
+                });
+            }
+
+            // continue normal flow
+            next();
+        }
     }
 });
 
